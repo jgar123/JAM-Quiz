@@ -6,7 +6,7 @@
   "author": "Jonny and Mike",
   "license": "MIT",
   "scripts": {
-    "serve:back": "nodemon backend/app.js",
+    "serve:back": "nodemon backend/server.js",
     "test": "jest"
   },
   "dependencies": {
