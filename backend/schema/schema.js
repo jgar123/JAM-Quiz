@@ -1,34 +1,66 @@
-const { GraphQLObjectType, GraphQLString,
-  GraphQLID, GraphQLInt, GraphQLSchema }  = require('graphql')
+const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLInt, GraphQLSchema, GraphQLList, GraphQLNonNull } = require('graphql')
+const Quiz = require('../models/Quiz')
+const User = require('../models/User')
 
-var fakeBookDatabase = [
-  { name: 'Book 1', pages: 432, id: 1 },
-  { name: 'Book 2', pages: 32, id: 2 },
-  { name: 'Book 3', pages: 532, id: 3 },
-  { name: 'Book 4', pages: 532, id: 4 },
-  { name: 'Book 5', pages: 532, id: 5 }
-]
 
-const BookType = new GraphQLObjectType({
-  name: 'Book',
+
+const QuizType = new GraphQLObjectType({
+  name: 'Quiz',
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
-    pages: { type: GraphQLInt }
+    pages: { type: GraphQLInt },
+    author: {
+      type: UserType,
+      resolve(parent, args) {
+        return User.findById(parent.authorID)
+      }
+    }
+  })
+})
+
+const UserType = new GraphQLObjectType({
+  name: 'User',
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    age: { type: GraphQLInt },
+    book: {
+      type: new GraphQLList(QuizType),
+      resolve(parent, args) {
+        return Quiz.find({ authorID: parent.id });
+      }
+    }
   })
 })
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
-    book: {
-      type: BookType,
+    quiz: {
+      type: QuizType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        console.log(parent)
-        console.log(args)
-        // requires == as the types are actually different
-        return fakeBookDatabase.find((item) => item.id == args.id )
+        return Quiz.findById(args.id)
+      }
+    },
+    quizzes: {
+      type: new GraphQLList(QuizType),
+      resolve(parent, args) {
+        return Quiz.find({})
+      }
+    },
+    user: {
+      type: UserType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return User.findById(args.id)
+      }
+    },
+    users: {
+      type: new GraphQLList(UserType),
+      resolve(parent, args) {
+        return User.find({})
       }
     }
   }
