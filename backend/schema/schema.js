@@ -9,11 +9,10 @@ const QuizType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
-    pages: { type: GraphQLInt },
-    author: {
+    admin: {
       type: UserType,
       resolve(parent, args) {
-        return User.findById(parent.authorID)
+        return User.findById(parent.username)
       }
     }
   })
@@ -24,13 +23,7 @@ const UserType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
-    age: { type: GraphQLInt },
-    book: {
-      type: new GraphQLList(QuizType),
-      resolve(parent, args) {
-        return Quiz.find({ authorID: parent.id });
-      }
-    }
+    username: { type: GraphQLString }
   })
 })
 
@@ -47,7 +40,7 @@ const RootQuery = new GraphQLObjectType({
     quizzes: {
       type: new GraphQLList(QuizType),
       resolve(parent, args) {
-        return Quiz.find({})
+        return Quiz.find()
       }
     },
     user: {
@@ -60,12 +53,46 @@ const RootQuery = new GraphQLObjectType({
     users: {
       type: new GraphQLList(UserType),
       resolve(parent, args) {
-        return User.find({})
+        return User.find()
+      }
+    }
+  }
+})
+
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addUser: {
+      type: UserType,
+      args: {
+        //GraphQLNonNull make these field required
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        username: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parent, args) {
+        const user = new User({
+          name: args.name,
+          username: args.username
+        })
+        return user.save()
+      }
+    },
+    addQuiz: {
+      type: QuizType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parent, args) {
+        const quiz = new Quiz({
+          name: args.name
+        })
+        return quiz.save()
       }
     }
   }
 })
 
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation: Mutation
 })
