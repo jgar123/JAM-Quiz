@@ -6,18 +6,27 @@
   "author": "Jonny and Mike",
   "license": "MIT",
   "scripts": {
-    "serve:back": "nodemon backend/server.js",
+    "start:backend": "nodemon backend/src/index.js",
+    "get-schema": "graphql get-schema -p prisma",
     "test": "jest"
   },
-  "dependencies": {
-    "express": "^4.17.1",
-    "express-graphql": "^0.9.0",
-    "graphql": "^15.0.0",
-    "mongoose": "^5.9.13",
-    "mongoose-unique-validator": "^2.0.3"
-  },
   "devDependencies": {
-    "jest": "^26.0.1",
-    "jest-cli": "^26.0.1"
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^2.1.0",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.13.1",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^3.1.14"
+  },
+  "dependencies": {
+    "apollo-server": "^2.14.4",
+    "graphql-cli": "3",
+    "prisma-binding": "^2.3.16"
   }
 }
