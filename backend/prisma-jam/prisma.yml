@@ -1,0 +1,2 @@
+endpoint: http://localhost:4466/jam/default
+datamodel: datamodel.graphql
