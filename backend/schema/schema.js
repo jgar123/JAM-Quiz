@@ -2,8 +2,6 @@ const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLInt, GraphQLSchema, 
 const Quiz = require('../models/Quiz')
 const User = require('../models/User')
 
-
-
 const QuizType = new GraphQLObjectType({
   name: 'Quiz',
   fields: () => ({
