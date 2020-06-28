@@ -1,7 +1,24 @@
 type User {
   id: ID! @id
-  name: String!
+  username: String!
   email: String! @unique
+  quizzes: [Quiz!]!
+  verified: Boolean @default(value: false)
+  verifiedCode: String!
+  profilePicture: String
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
+}
+
+type Quiz {
+  id: ID! @id
+  name: String
+  players: [User!]!
+  questions: [Question!]!
+}
+
+type Question {
+  id: ID! @id
+  question: String!
+  answer: String!
 }
